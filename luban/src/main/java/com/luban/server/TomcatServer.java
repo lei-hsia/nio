@@ -34,6 +34,8 @@ public class TomcatServer {
                         String contents = new String(bytes);
                         System.out.println(contents);
                         byteBuffer.flip();
+                    } else if (read == -1){
+                        channelList.remove(socketChannel);
                     }
                 }
 
@@ -45,6 +47,13 @@ public class TomcatServer {
                 }
 
             }
+            /*
+            *   效率低下:
+            *   1. for循环: 不写在java代码中，让OS循环
+            *   2. for循环: 大部分循环都是无意义的: e.g. 10000个, 1000个activeconn, 9000个无用的
+            *   1> selector交给OS; epoll循环效率实际上并不比selector高，只是循环的次数通过 #events减少了
+            *   selector/epoll 就是为了解决 channelList和for循环这个问题
+            * */
 
 
         } catch (IOException e) {
