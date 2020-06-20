@@ -3,6 +3,7 @@ package com.luban.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 public class BIOMysqlServer {
 
@@ -25,20 +26,30 @@ public class BIOMysqlServer {
     *   >> 1. 阻塞: clientSocket.xxx(false): 改为非阻塞
     *   >> 2. client丢了: 把前面创建的client放到一个list中;
     * */
+    static List<Socket> socketList = null;
+
     public static void main(String[] args) {
 
         try {
             ServerSocket serverSocket = new ServerSocket(8080);
             while (true) {
-                // accept: 阻塞: 放弃CPU
-                Socket clientSocket = serverSocket.accept();
 
-                // clientSocket.xxx(false): 改为非阻塞
-                // read也阻塞
-                int read = clientSocket.getInputStream().read(bytes); // read=0: 如果没有读到
+                // clientSocket.xxx(false): 改为非阻塞: accept,read都不阻塞了
+                Socket clientSocket = serverSocket.accept();  // accept: 阻塞: 放弃CPU
 
-                if (read > 0) {
-                    System.out.printf(new String(bytes));
+                for (Socket socket: socketList) {
+                    int read = clientSocket.getInputStream().read(bytes);  // read也阻塞
+                    if (read > 0) {
+                        System.out.printf(new String(bytes));
+                    }
+                }
+
+                if (clientSocket != null) {
+                    socketList.add(clientSocket);
+                    // for loop
+                } else {
+                    // 没有人连，还是要看前面已经在list中的socket有没有人传数据过来
+                    // for loop
                 }
             }
 
