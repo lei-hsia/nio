@@ -10,6 +10,7 @@ import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
 
+// 单线程并发: 关键是把serverSocket和msgSocket都设置为NonBlocking并用list记录之前所有已经建立连接的msgSocket
 public class TomcatServer {
     static ByteBuffer byteBuffer = ByteBuffer.allocate(512);
     static List<SocketChannel> channelList = new ArrayList<>();
@@ -20,11 +21,13 @@ public class TomcatServer {
             SocketAddress socketAddress = new InetSocketAddress("127.0.0.1", 8080);
             serverSocket.bind(socketAddress);
 
-            serverSocket.configureBlocking(false); // 等待连接的socket设置为非阻塞
+            // 等待连接的socket设置为非阻塞; 如果这个socket是阻塞的,那么accept的时候一直阻塞直到2nd client连接
+            // 而此时,1st msgSocket发消息也接收不到，因为程序阻塞在了serverSocket.accept()
+            serverSocket.configureBlocking(false);
 
             while (true) {
 
-                for (SocketChannel socketChannel : channelList) {
+                for (SocketChannel socketChannel : channelList) { //不管有没有人来连，都需要遍历之前已经建立的msgSocket看有没有信息来
                     int read = socketChannel.read(byteBuffer);
                     if (read > 0) {
                         System.out.println("read------"+read);
@@ -39,11 +42,15 @@ public class TomcatServer {
                     }
                 }
 
-                SocketChannel accept = serverSocket.accept();
-                if (accept != null) {
+                SocketChannel msgSocket = serverSocket.accept();
 
-                    accept.configureBlocking(false); // 等待数据传输的socket设置为非阻塞
-                    channelList.add(accept);
+
+                if (msgSocket != null) { // 有人来连接
+
+                    msgSocket.configureBlocking(false); // 等待数据传输的socket设置为非阻塞
+                    channelList.add(msgSocket);
+                } else {
+                    // 没有人连接，什么都不做, 直接回到循环顶部
                 }
 
             }
