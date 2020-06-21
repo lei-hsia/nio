@@ -16,6 +16,11 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
+
+        // 定义客户端能向服务端发送消息，客户端需要是什么prefix
         registry.setApplicationDestinationPrefixes("/someprefix");
+
+        // 定义客户端能够订阅哪些东西，必须是服务端这边同意可以订阅的,否则客户端可以乱写: (由此看出实际上虽然服务端可以向客户端发东西，但是客户端能接收的面还是服务端限制的)
+        registry.enableSimpleBroker("/topic");
     }
 }

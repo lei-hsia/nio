@@ -22,9 +22,13 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-//        stompClient.subscribe('/topic/greetings', function (greeting) {
-//            showGreeting(JSON.parse(greeting.body).content);
-//        });
+
+        // 客户端接收服务端消息(服务端限制范围内的):
+        // @SendTo("/topic/message")
+        stompClient.subscribe('/topic/message', function (data) {
+            console.log(data);
+            // showGreeting(JSON.parse(greeting.body).content);
+        });
     });
 }
 
