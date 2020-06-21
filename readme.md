@@ -27,3 +27,5 @@
 2. 但是BIO: 巨大浪费: 多线程造成服务器资源浪费
 3. NIO: 用单线程处理并发
 4. 单线程BIO为什么不能处理多并发: 见 `BIOMysqlServer`
+
+### luban: websocket: springboot实现弹幕功能

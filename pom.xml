@@ -11,6 +11,7 @@
     <modules>
         <module>cxf001-server</module>
         <module>luban</module>
+        <module>luban-websocket</module>
     </modules>
     <dependencies>
         <dependency>
