@@ -23,9 +23,15 @@ function connect() {
         setConnected(true);
         console.log('Connected: ' + frame);
 
-        // 客户端接收服务端消息(服务端限制范围内的):
+        // 客户端接收服务端回调消息(服务端限制范围内的): 这还不是服务端向客户端发送的过程，只是回调而已
         // @SendTo("/topic/message")
         stompClient.subscribe('/topic/message', function (data) {
+            console.log(data);
+            // showGreeting(JSON.parse(greeting.body).content);
+        });
+
+        //
+        stompClient.subscribe('/user/lei/p2p', function (data) {
             console.log(data);
             // showGreeting(JSON.parse(greeting.body).content);
         });

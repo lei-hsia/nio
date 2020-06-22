@@ -1,9 +1,12 @@
 package com.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class MessageController {
@@ -15,5 +18,13 @@ public class MessageController {
         String content = new String(bytes);
         System.out.print(content);
         return "success: from Server side";
+    }
+
+    @Autowired
+    SimpMessagingTemplate simpMessagingTemplate;  // Spring提供的服务端给客户端发消息的类
+
+    @GetMapping("/server-send")
+    public void server2client() { // 服务端给客户端: 群发
+        simpMessagingTemplate.convertAndSend("/topic/message", "服务端给客户端，群发");
     }
 }
