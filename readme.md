@@ -28,4 +28,8 @@
 3. NIO: 用单线程处理并发
 4. 单线程BIO为什么不能处理多并发: 见 `BIOMysqlServer`
 
-### luban: websocket: springboot实现弹幕功能
+### luban: websocket
+
+见 `websocket`部分代码
+
+

@@ -12,6 +12,8 @@
         <module>cxf001-server</module>
         <module>luban</module>
         <module>luban-websocket</module>
+        <module>zhuge-spring-beanpostprocessor</module>
+        <module>tuling-spring-iocbeanlifecycle</module>
     </modules>
     <dependencies>
         <dependency>

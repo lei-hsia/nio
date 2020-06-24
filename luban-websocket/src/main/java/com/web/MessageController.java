@@ -23,8 +23,15 @@ public class MessageController {
     @Autowired
     SimpMessagingTemplate simpMessagingTemplate;  // Spring提供的服务端给客户端发消息的类
 
+    // 服务端给客户端: 群发
     @GetMapping("/server-send")
-    public void server2client() { // 服务端给客户端: 群发
+    public void server2client() {
         simpMessagingTemplate.convertAndSend("/topic/message", "服务端给客户端，群发");
+    }
+
+    // 服务端给客户端: 点对点发送
+    @GetMapping("/server-send")
+    public void server2pointclient() {
+        simpMessagingTemplate.convertAndSendToUser("lei", "/p2p", "服务给客户：点对点");
     }
 }
